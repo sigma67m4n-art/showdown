@@ -1,11 +1,28 @@
 {
-  "version": 2,
-  "routes": [
-    { "src": "/api/data", "dest": "api/data.js" },
-    { "src": "/styles.css", "dest": "css/styles.css" },
-    { "src": "/app.js", "dest": "js/app.js" },
-    { "src": "/fonts/((?!\\.well-known/).*)", "headers": { "cacheControl": "public, max-age=31536000, immutable" } },
-    { "src": "/logo.webp", "headers": { "cacheControl": "public, max-age=86400" } },
-    { "src": "/(.*)", "dest": "index.html" }
+  "rewrites": [
+    {
+      "source": "/((?!api/|css/|js/|fonts/|logo\\.webp|index\\.html).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/fonts/((?!\\.well-known/).*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/logo.webp",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    }
   ]
 }
