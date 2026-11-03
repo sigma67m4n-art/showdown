@@ -1,7 +1,6 @@
 {
   "functions": {
     "api/data.js": {
-      "includeFiles": "{css,js,fonts}/**,index.html,logo.webp",
       "maxDuration": 30
     }
   },
