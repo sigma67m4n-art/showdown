@@ -139,7 +139,8 @@ const buildCard = (p, a, on) => {
     root.appendChild(pw);
   }
 
-  root.appendChild(mkLabel(LAYOUT.ovr, a, p.rating, "fcmc-ovr"));
+  const ovr = on && Number.isFinite(Number(p.rating)) ? Number(p.rating) + 1 : p.rating;
+  root.appendChild(mkLabel(LAYOUT.ovr, a, ovr, "fcmc-ovr"));
   root.appendChild(mkLabel(LAYOUT.pos, a, p.position, ""));
 
   const nb = document.createElement("div");
