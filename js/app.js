@@ -146,7 +146,7 @@ const buildCard = (p, a) => {
   nb.style.width = LAYOUT.name.sizeX * a + "px";
   nb.style.height = LAYOUT.name.sizeY * a + "px";
   const span = document.createElement("span");
-  span.textContent = (p.cardName || p.name || "").toUpperCase();
+  span.textContent = String(p.cardName || "").toUpperCase();
   nb.appendChild(span);
   root.appendChild(nb);
   const doFit = () => fitName(span, LAYOUT.name.sizeX * a, LAYOUT.name.fontSize * a, a);
