@@ -4,6 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build": "node scripts/build.mjs"
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
   }
 }

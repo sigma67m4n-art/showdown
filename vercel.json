@@ -1,28 +1,10 @@
 {
+  "functions": {
+    "api/index.js": {
+      "includeFiles": ["css/**", "js/**", "fonts/**", "index.html", "logo.webp"]
+    }
+  },
   "rewrites": [
-    {
-      "source": "/((?!api/|css/|js/|fonts/|logo\\.webp|index\\.html).*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/fonts/((?!\\.well-known/).*)",
-      "headers": [
-        {
-          "key": "cache-control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/logo.webp",
-      "headers": [
-        {
-          "key": "cache-control",
-          "value": "public, max-age=86400"
-        }
-      ]
-    }
+    { "source": "/(.*)", "destination": "/api" }
   ]
 }
