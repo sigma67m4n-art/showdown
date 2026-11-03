@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    { "source": "/styles.css", "destination": "/css/styles.css" },
+    { "source": "/app.js", "destination": "/js/app.js" }
+  ],
+  "headers": [
+    { "source": "/fonts/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/logo.webp", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }
+  ]
+}
