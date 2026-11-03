@@ -3,6 +3,8 @@ const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct
 const SPRITE_COLS = 7;
 const SPRITE_FRAMES = 45;
 const SPRITE_STEP = 66.66666666666667;
+const ON_BG = "https://cdn.fcmobileforum.com/card-art/proto_PLAYERS_S2:44/playercardui_fcm25_showdown_B_FCM25_SHOWDOWNON_STATIC";
+const ON_SPRITE = "https://cdn.fcmobileforum.com/card-art/proto_PLAYERS_S2:44/playercardui_fcm25_showdown_B_FCM25_SHOWDOWNON_LOOP";
 
 const TZO = -new Date().getTimezoneOffset() / 60;
 const TZS = "GMT" + (TZO >= 0 ? "+" : "") + (TZO % 1 ? TZO.toFixed(1) : TZO);
@@ -89,20 +91,22 @@ const fitName = (span, boxW, baseFs, a) => {
   span.style.transform = `scaleX(${l})`;
 };
 
-const buildCard = (p, a) => {
+const buildCard = (p, a, on) => {
   const O = Math.round(256 * a);
+  const bgSrc = on ? ON_BG : p.cardBg;
+  const spriteSrc = on ? ON_SPRITE : p.cardSprite;
   const root = document.createElement("div");
   root.className = "fcmc";
   root.style.width = O + "px";
   root.style.height = O + "px";
   root.style.borderRadius = 8 * a + "px";
 
-  if (p.cardBg) {
+  if (bgSrc) {
     const bg = document.createElement("img");
     bg.className = "fcmc-bg";
     bg.alt = "";
     bg.draggable = false;
-    bg.src = p.cardBg;
+    bg.src = bgSrc;
     root.appendChild(bg);
   } else {
     const g = document.createElement("div");
@@ -111,10 +115,10 @@ const buildCard = (p, a) => {
   }
 
   let sprite = null;
-  if (p.cardSprite) {
+  if (spriteSrc) {
     sprite = document.createElement("div");
     sprite.className = "fcmc-sprite";
-    sprite.style.backgroundImage = `url("${p.cardSprite}")`;
+    sprite.style.backgroundImage = `url("${spriteSrc}")`;
     sprite.style.backgroundSize = `${7 * O}px ${7 * O}px`;
     sprite.style.backgroundPosition = "0px 0px";
     root.appendChild(sprite);
@@ -159,7 +163,7 @@ const buildCard = (p, a) => {
   root.appendChild(mkIcon(LAYOUT.club, a, em.club));
 
   if (sprite) {
-    Promise.all([loadImg(p.cardSprite), p.cardBg ? loadImg(p.cardBg) : Promise.resolve()]).then(() => {
+    Promise.all([loadImg(spriteSrc), bgSrc ? loadImg(bgSrc) : Promise.resolve()]).then(() => {
       sprite.style.opacity = "1";
       let frame = 0;
       let last = 0;
@@ -276,7 +280,7 @@ const matchupBlock = (m) => {
       <div class="n">${pl.name}${win ? `<span class="wtag"><span class="ms" data-ic="emoji_events">emoji_events</span>WINNER</span>` : ""}</div>
       <div class="c">${pl.clubLogo ? `<img src="${pl.clubLogo}" alt="">` : ""}${pl.club || "unknown club"}</div>`;
     div.appendChild(info);
-    fitCard(box, (a) => buildCard(pl, a));
+    fitCard(box, (a) => buildCard(pl, a, win));
     return div;
   };
 
