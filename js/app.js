@@ -298,7 +298,6 @@ const matchupBlock = (m) => {
     </div>
     <div class="mfoot">
       <div class="winline">${winner ? `<b>${winner.name}</b> ${winner.club} to win` : "Draw looks most likely"}</div>
-      <a class="tom" href="${m.url}" target="_blank" rel="noopener">OddAlerts<span class="ms" data-ic="arrow_outward">arrow_outward</span></a>
     </div>`;
   const mtop = el.querySelector(".mtop");
   mtop.appendChild(side(m.home.player, "home", homeWin));

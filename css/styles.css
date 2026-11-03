@@ -192,19 +192,6 @@ img { pointer-events: none; -webkit-user-drag: none; }
   color: var(--muted);
 }
 .winline b { color: var(--ink); font-weight: 600; }
-.tom {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--af);
-  color: var(--ao);
-  padding: 10px 14px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.2;
-}
-.tom .ms { font-size: 18px; }
-.tom:hover { filter: brightness(1.12); }
 
 .none {
   background: var(--surface);
