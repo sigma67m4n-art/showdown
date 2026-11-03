@@ -1,11 +1,14 @@
 {
   "functions": {
-    "api/index.js": {
+    "api/data.js": {
       "includeFiles": "{css,js,fonts}/**,index.html,logo.webp",
       "maxDuration": 30
     }
   },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api" }
+    {
+      "source": "/((?!api/|css/|js/|fonts/|logo\\.webp|index\\.html).*)",
+      "destination": "/index.html"
+    }
   ]
 }
