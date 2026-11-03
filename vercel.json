@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": ["css/**", "js/**", "fonts/**", "index.html", "logo.webp"]
+      "includeFiles": "{css,js,fonts}/**,index.html,logo.webp"
     }
   },
   "rewrites": [
