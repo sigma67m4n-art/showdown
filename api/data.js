@@ -1,7 +1,5 @@
 import { getData } from "../lib/data.js";
 
-export const config = { runtime: "edge" };
-
 export default async function handler() {
   try {
     const d = await getData();
