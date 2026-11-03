@@ -7,6 +7,10 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
+app.get("/api/ping", async (_req, res) => {
+  res.json({ ok: true, node: process.version, vercel: process.env.VERCEL || null });
+});
+
 app.get("/api/data", async (_req, res) => {
   try {
     const d = await getData();
