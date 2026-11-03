@@ -218,6 +218,17 @@ img { pointer-events: none; -webkit-user-drag: none; }
 .credits a { color: var(--ink); font-weight: 600; }
 .credits a:hover { text-decoration: underline; }
 
+.note {
+  margin: 28px 0 0;
+  padding: 12px 16px;
+  border: 1px solid var(--surface2);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .fcmc { position: relative; overflow: hidden; isolation: isolate; flex: none; }
 .fcmc .fcmc-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; image-rendering: high-quality; }
 .fcmc .fcmc-grad { position: absolute; inset: 0; z-index: 0; background: linear-gradient(135deg, #121c29 0%, #0d1622 50%, #070c14 100%); }
