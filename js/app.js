@@ -226,7 +226,8 @@ const ICON_SVG = {
   arrow_outward: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>',
   emoji_events: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>',
   check_circle: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
-  cancel: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>'
+  cancel: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>',
+  remove: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13H5v-2h14v2z"/></svg>'
 };
 
 let iconsSettled = false;
@@ -357,29 +358,43 @@ const renderHistory = (d) => {
   if (!el) return;
   const s = d.stats || {};
   const rows = Array.isArray(d.results) ? d.results : [];
-  if (!s.played || !rows.length) {
+  const played = s.played != null ? s.played : rows.length;
+  if (!played || !rows.length) {
     el.innerHTML = "";
     return;
   }
-  const pct = Math.round(s.accuracy * 100);
+  const correct = s.correct || 0;
+  const decided = s.decided != null ? s.decided : correct + (s.wrong || 0);
+  const draws = s.draws || 0;
+  const pct = decided ? Math.round((correct / decided) * 100) : 0;
   const list = rows
     .slice(0, 8)
     .map((m) => {
       const home = m.home.player.club || m.home.player.name;
       const away = m.away.player.club || m.away.player.name;
-      const ic = m.correct ? "check_circle" : "cancel";
-      return `<div class="hrow ${m.correct ? "ok" : "no"}">
+      const o = m.outcome || (m.correct ? "correct" : "wrong");
+      const tag = o === "correct" ? "ok" : o === "draw" ? "draw" : "no";
+      const ic = o === "correct" ? "check_circle" : o === "draw" ? "remove" : "cancel";
+      const label = o === "correct" ? "Correct" : o === "draw" ? "Draw" : "Miss";
+      return `<div class="hrow ${tag}">
         <span class="hteams">${home} <b>${m.homeScore}–${m.awayScore}</b> ${away}</span>
-        <span class="hpick"><span class="ms ms-svg">${ICON_SVG[ic]}</span>${m.correct ? "Correct" : "Miss"}</span>
+        <span class="hpick"><span class="ms ms-svg">${ICON_SVG[ic]}</span>${label}</span>
       </div>`;
     })
     .join("");
+  const sub = draws
+    ? `<div class="hsub">${draws} draw${draws > 1 ? "s" : ""} not counted as wrong</div>`
+    : "";
   el.innerHTML = `
     <h2 class="htitle">Track record</h2>
     <div class="hhead">
-      <div class="hbig">${pct}<span>%</span></div>
-      <div class="htxt"><b>${s.correct} / ${s.played}</b> predictions correct, checked against the final score</div>
+      <div class="hmetric">
+        <div class="hlabel">Overall accuracy</div>
+        <div class="hbig">${pct}<span>%</span></div>
+      </div>
+      <div class="htxt"><b>${correct} / ${decided}</b> decisive predictions correct, checked against the final score</div>
     </div>
+    ${sub}
     <div class="hlist">${list}</div>`;
   fixIcons(el);
 };

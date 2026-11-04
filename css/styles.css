@@ -305,6 +305,15 @@ img { pointer-events: none; -webkit-user-drag: none; }
   align-items: center;
   gap: 18px;
 }
+.hmetric { flex: none; }
+.hlabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
 .hbig {
   font-size: 44px;
   font-weight: 800;
@@ -316,6 +325,7 @@ img { pointer-events: none; -webkit-user-drag: none; }
 .hbig span { font-size: 22px; font-weight: 700; }
 .htxt { font-size: 14px; line-height: 1.45; color: var(--muted); }
 .htxt b { color: var(--ink); font-weight: 700; }
+.hsub { margin-top: 10px; font-size: 13px; color: var(--muted); }
 .hlist {
   margin-top: 12px;
   display: flex;
@@ -338,6 +348,7 @@ img { pointer-events: none; -webkit-user-drag: none; }
 .hpick .ms { font-size: 18px; }
 .hrow.ok .hpick { color: #4ADE80; }
 .hrow.no .hpick { color: #F87171; }
+.hrow.draw .hpick { color: #FBBF24; }
 
 @media (max-width: 680px) {
   .mtop { grid-template-columns: 1fr; gap: 18px; }
