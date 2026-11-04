@@ -214,13 +214,6 @@ img { pointer-events: none; -webkit-user-drag: none; }
   color: var(--muted);
 }
 .winline b { color: var(--ink); font-weight: 600; }
-.absnote {
-  flex-basis: 100%;
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--muted);
-  opacity: 0.85;
-}
 
 .none {
   background: var(--surface);

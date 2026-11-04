@@ -312,7 +312,6 @@ const matchupBlock = (m) => {
     </div>
     <div class="mfoot">
       <div class="winline">${winner ? `<b>${winner.name}</b> ${winner.club} to win` : "Draw looks most likely"}</div>
-      ${m.absences ? `<div class="absnote">${m.absences}</div>` : ""}
     </div>`;
   const mtop = el.querySelector(".mtop");
   mtop.appendChild(side(m.home.player, "home", homeWin));
