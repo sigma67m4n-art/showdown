@@ -1,5 +1,6 @@
 const $ = (id) => document.getElementById(id);
 const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const SPRITE_COLS = 7;
 const SPRITE_FRAMES = 45;
 const SPRITE_STEP = 66.66666666666667;
@@ -15,12 +16,12 @@ const fmtDay = (iso) => {
 };
 const fmtCardDate = (day) => {
   const [y, m, d] = String(day || "").split("-").map(Number);
-  return y && m && d ? `${MON[m - 1]} ${d} ${y}` : String(day || "");
+  return y && m && d ? `${d} ${MON[m - 1]} ${y}` : String(day || "");
 };
 const fmtKick = (iso) => {
   const d = new Date(iso);
   const p = (n) => String(n).padStart(2, "0");
-  return `${MON[d.getMonth()]} ${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())} ${TZS}`;
+  return `${WD[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]} · ${p(d.getHours())}:${p(d.getMinutes())} ${TZS}`;
 };
 
 const LAYOUT = {
@@ -223,7 +224,9 @@ const ICON_SVG = {
   swap_horiz: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.99 11 3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>',
   schedule: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>',
   arrow_outward: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>',
-  emoji_events: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>'
+  emoji_events: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>',
+  check_circle: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
+  cancel: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>'
 };
 
 let iconsSettled = false;
@@ -266,8 +269,9 @@ const fitCard = (host, make) => {
 };
 
 const matchupBlock = (m) => {
-  const homeWin = m.home.p > m.away.p;
-  const awayWin = m.away.p > m.home.p;
+  const best = Math.max(m.home.p, m.draw, m.away.p);
+  const homeWin = m.home.p === best && m.home.p > m.away.p;
+  const awayWin = m.away.p === best && m.away.p > m.home.p;
   const winner = homeWin ? m.home.player : awayWin ? m.away.player : null;
   const homeAcc = accentFor(m.home.player.name);
   const awayAcc = accentFor(m.away.player.name);
@@ -330,6 +334,12 @@ const renderMeta = (v) => {
   $("meta").innerHTML = v && v.date ? `<span class="chip">Cards added ${fmtCardDate(v.date)}</span>` : "";
 };
 
+const showLoading = () => {
+  $("matches").innerHTML = `<div class="loading"><span class="spinner"></span><span class="loading-txt">Loading predictions…</span></div>`;
+  const h = $("history");
+  if (h) h.innerHTML = "";
+};
+
 const renderVersion = (v) => {
   renderMeta(v);
   const mc = $("matches");
@@ -342,7 +352,40 @@ const renderVersion = (v) => {
   fixIcons(mc);
 };
 
+const renderHistory = (d) => {
+  const el = $("history");
+  if (!el) return;
+  const s = d.stats || {};
+  const rows = Array.isArray(d.results) ? d.results : [];
+  if (!s.played || !rows.length) {
+    el.innerHTML = "";
+    return;
+  }
+  const pct = Math.round(s.accuracy * 100);
+  const list = rows
+    .slice(0, 8)
+    .map((m) => {
+      const home = m.home.player.club || m.home.player.name;
+      const away = m.away.player.club || m.away.player.name;
+      const ic = m.correct ? "check_circle" : "cancel";
+      return `<div class="hrow ${m.correct ? "ok" : "no"}">
+        <span class="hteams">${home} <b>${m.homeScore}–${m.awayScore}</b> ${away}</span>
+        <span class="hpick"><span class="ms ms-svg">${ICON_SVG[ic]}</span>${m.correct ? "Correct" : "Miss"}</span>
+      </div>`;
+    })
+    .join("");
+  el.innerHTML = `
+    <h2 class="htitle">Track record</h2>
+    <div class="hhead">
+      <div class="hbig">${pct}<span>%</span></div>
+      <div class="htxt"><b>${s.correct} / ${s.played}</b> predictions correct, checked against the final score</div>
+    </div>
+    <div class="hlist">${list}</div>`;
+  fixIcons(el);
+};
+
 const render = async () => {
+  showLoading();
   let d;
   try {
     d = await (await fetch("/api/data")).json();
@@ -367,6 +410,7 @@ const render = async () => {
     picker.style.display = "none";
   }
   renderVersion(versions[0]);
+  renderHistory(d);
 };
 
 document.addEventListener("contextmenu", (e) => e.preventDefault());
