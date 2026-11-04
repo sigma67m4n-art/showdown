@@ -13,6 +13,10 @@ const fmtDay = (iso) => {
   const d = new Date(iso);
   return `${MON[d.getMonth()]} ${d.getDate()} ${d.getFullYear()}`;
 };
+const fmtCardDate = (day) => {
+  const [y, m, d] = String(day || "").split("-").map(Number);
+  return y && m && d ? `${MON[m - 1]} ${d} ${y}` : String(day || "");
+};
 const fmtKick = (iso) => {
   const d = new Date(iso);
   const p = (n) => String(n).padStart(2, "0");
@@ -322,6 +326,22 @@ const matchupBlock = (m) => {
   return el;
 };
 
+const renderMeta = (v) => {
+  $("meta").innerHTML = v && v.date ? `<span class="chip">Cards added ${fmtCardDate(v.date)}</span>` : "";
+};
+
+const renderVersion = (v) => {
+  renderMeta(v);
+  const mc = $("matches");
+  mc.innerHTML = "";
+  if (!v || !v.matches.length) {
+    mc.innerHTML = `<div class="none">No head-to-head fixtures found within the 11-day window</div>`;
+    return;
+  }
+  v.matches.forEach((m) => mc.appendChild(matchupBlock(m)));
+  fixIcons(mc);
+};
+
 const render = async () => {
   let d;
   try {
@@ -331,17 +351,22 @@ const render = async () => {
     return;
   }
 
-  const updated = d.players.reduce((mx, p) => (p.created > mx ? p.created : mx), d.players[0] ? d.players[0].created : "");
-  $("meta").innerHTML = updated ? `<span class="chip">Updated ${fmtDay(updated)} (card added)</span>` : "";
+  const versions =
+    Array.isArray(d.versions) && d.versions.length
+      ? d.versions
+      : [{ id: "all", date: d.players && d.players[0] ? String(d.players[0].created || "").slice(0, 10) : "", matches: d.matches || [] }];
 
-  const mc = $("matches");
-  mc.innerHTML = "";
-  if (!d.matches.length) {
-    mc.innerHTML = `<div class="none">No head-to-head fixtures found within the 11-day window</div>`;
-  } else {
-    d.matches.forEach((m) => mc.appendChild(matchupBlock(m)));
+  const picker = $("picker");
+  const sel = $("version");
+  if (versions.length > 1) {
+    picker.style.display = "";
+    sel.innerHTML = versions.map((v, i) => `<option value="${i}">${fmtCardDate(v.date)}</option>`).join("");
+    sel.value = "0";
+    sel.onchange = () => renderVersion(versions[+sel.value]);
+  } else if (picker) {
+    picker.style.display = "none";
   }
-  fixIcons(mc);
+  renderVersion(versions[0]);
 };
 
 document.addEventListener("contextmenu", (e) => e.preventDefault());
