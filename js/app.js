@@ -377,8 +377,12 @@ const renderHistory = (d) => {
       const tag = o === "correct" ? "ok" : o === "draw" ? "draw" : "no";
       const ic = o === "correct" ? "check_circle" : o === "draw" ? "remove" : "cancel";
       const label = o === "correct" ? "Correct" : o === "draw" ? "Draw" : "Miss";
+      const pickName = m.pick === "home" ? home : m.pick === "away" ? away : "Draw";
       return `<div class="hrow ${tag}">
-        <span class="hteams">${home} <b>${m.homeScore}–${m.awayScore}</b> ${away}</span>
+        <span class="hmatch">
+          <span class="hteams">${home} <b>${m.homeScore}–${m.awayScore}</b> ${away}</span>
+          <span class="hpred"><span class="hmark">FCMShowdown</span> picked <b>${pickName}</b></span>
+        </span>
         <span class="hpick"><span class="ms ms-svg">${ICON_SVG[ic]}</span>${label}</span>
       </div>`;
     })
