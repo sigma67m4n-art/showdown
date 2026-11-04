@@ -297,6 +297,15 @@ img { pointer-events: none; -webkit-user-drag: none; }
   letter-spacing: -0.02em;
   color: var(--ink);
 }
+.hempty {
+  background: var(--surface);
+  margin-top: 16px;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
 .hhead {
   background: var(--surface);
   margin-top: 16px;

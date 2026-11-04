@@ -359,8 +359,9 @@ const renderHistory = (d) => {
   const s = d.stats || {};
   const rows = Array.isArray(d.results) ? d.results : [];
   const played = s.played != null ? s.played : rows.length;
+  const head = `<h2 class="htitle">Track record</h2>`;
   if (!played || !rows.length) {
-    el.innerHTML = "";
+    el.innerHTML = `${head}<div class="hempty">No predictions have been checked yet. Stats will show up here once a match has been played.</div>`;
     return;
   }
   const correct = s.correct || 0;
@@ -386,7 +387,7 @@ const renderHistory = (d) => {
     ? `<div class="hsub">${draws} draw${draws > 1 ? "s" : ""} not counted as wrong</div>`
     : "";
   el.innerHTML = `
-    <h2 class="htitle">Track record</h2>
+    ${head}
     <div class="hhead">
       <div class="hmetric">
         <div class="hlabel">Overall accuracy</div>
